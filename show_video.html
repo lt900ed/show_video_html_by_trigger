@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Show video by trigger</title>
+  <link rel="stylesheet" href="./css/show_video.css" type="text/css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="./js/show_video.js"></script>
+  <script>
+    var wh = [640, 1140]
+    var srcList = {
+      'win': [
+        "video/bakushin_win.mp4",
+        "video/dasuka_win.mp4",
+        "video/gorushi_win.mp4",
+        "video/taisin_win.mp4",
+        "video/urara_win.mp4",
+      ],
+      'lose': [
+        "video/dasuka_lose.mp4",
+        "video/taisin_lose.mp4",
+        "video/urara_lose.mp4",
+      ]
+    }
+    $(document).ready(function () {
+      window.displayArr = [];
+      setInterval(get_tsv_data, 3000, 'data/trigger.tsv', srcList, wh);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
