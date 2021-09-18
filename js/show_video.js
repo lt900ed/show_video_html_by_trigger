@@ -1,10 +1,14 @@
-function play_video(path_src, wh) {
+function play_video(path_src, wh, enable_loop) {
   v = document.createElement('video');
   v.setAttribute('width', wh[0]);
   v.setAttribute('height', wh[1]);
 
   v.addEventListener("ended", function(){
-    this.remove();
+    if (enable_loop) {
+      this.play();
+    } else {
+      this.remove();
+    }
   }, false);
 
   var src = document.createElement('source');
@@ -17,50 +21,34 @@ function play_video(path_src, wh) {
   v.play();
 }
 
-function play_next_video(srcList, wh) {
-    window.index += 1;
-    if (window.index > srcList.length - 1) {
-      window.index = 0
-    }
-    play_video(srcList[window.index], wh)
-}
-
-function play_loop(srcList, wh) {
+function play_or_add_video(path_src, wh, enable_loop) {
   if ($('video').length > 0) {
     $('video').on('ended', function() {
-      play_next_video(srcList, wh);
+      if (enable_loop) {
+        this.remove();
+      }
+      play_video(path_src, wh, enable_loop);
     });
   } else {
-    play_next_video(srcList, wh);
+    play_video(path_src, wh, enable_loop);
   }
 }
 
-function play_or_add_video(path_src, wh) {
-  if ($('video').length > 0) {
-    $('video').on('ended', function() {
-      play_video(path_src, wh);
-    });
-  } else {
-    play_video(path_src, wh);
-  }
-}
-
-function get_tsv_data(dataPath, srcList, wh) {
+function get_tsv_data(path_data, list_src, wh, enable_loop) {
   $.ajax({
-    url: dataPath,
+    url: path_data,
     type: 'GET',
     dataType: 'text',
     timeout: 5000,
     success:function(res) {
       var arr = tsv2array(res);
-      if (JSON.stringify(window.displayArr) != JSON.stringify(arr[arr.length - 1])) {
-        window.displayArr = arr[arr.length - 1];
-        var srcArr = srcList[arr[arr.length - 1][1]];
-        play_or_add_video(srcArr[Math.floor(Math.random() * srcArr.length)], wh);
+      if (JSON.stringify(window.arr_display) != JSON.stringify(arr[arr.length - 1])) {
+        window.arr_display = arr[arr.length - 1];
+        var srcArr = list_src[arr[arr.length - 1][1]];
+        play_or_add_video(srcArr[Math.floor(Math.random() * srcArr.length)], wh, enable_loop);
       }
     },
     error:function() {
-      alert("ロード失敗");
     }
   });
 }

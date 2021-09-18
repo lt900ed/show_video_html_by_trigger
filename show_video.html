@@ -7,8 +7,9 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="./js/show_video.js"></script>
   <script>
+    var enable_loop = false
     var wh = [640, 1140]
-    var srcList = {
+    var list_src = {
       'win': [
         "video/bakushin_win.mp4",
         "video/dasuka_win.mp4",
@@ -23,8 +24,8 @@
       ]
     }
     $(document).ready(function () {
-      window.displayArr = [];
-      setInterval(get_tsv_data, 3000, 'data/trigger.tsv', srcList, wh);
+      window.arr_display = [];
+      setInterval(get_tsv_data, 3000, 'data/trigger.tsv', list_src, wh, enable_loop);
     });
   </script>
 </head>
