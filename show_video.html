@@ -9,23 +9,30 @@
   <script>
     var enable_loop = false
     var wh = [640, 1140]
-    var list_src = {
-      'win': [
-        "video/bakushin_win.mp4",
-        "video/dasuka_win.mp4",
-        "video/gorushi_win.mp4",
-        "video/taisin_win.mp4",
-        "video/urara_win.mp4",
-      ],
-      'lose': [
-        "video/dasuka_lose.mp4",
-        "video/taisin_lose.mp4",
-        "video/urara_lose.mp4",
-      ]
+    var dic_keys = {
+      'win': {
+        'mode': 'sequent',
+        'src_start': "video/dasuka_win.mp4",
+        'src': [
+          "video/bakushin_win.mp4",
+          "video/dasuka_win.mp4",
+          "video/gorushi_win.mp4",
+          "video/taisin_win.mp4",
+          "video/urara_win.mp4",
+        ]},
+      'lose': {
+        'mode': 'random',
+        'src': [
+          "video/dasuka_lose.mp4",
+          "video/taisin_lose.mp4",
+          "video/urara_lose.mp4",
+        ]}
     }
     $(document).ready(function () {
       window.arr_display = [];
-      setInterval(get_tsv_data, 3000, 'data/trigger.tsv', list_src, wh, enable_loop);
+      window.dic_start_indexes = {};
+      get_start_index(dic_keys);
+      setInterval(get_tsv_data, 3000, 'data/trigger.tsv', dic_keys, wh, enable_loop);
     });
   </script>
 </head>

@@ -34,7 +34,21 @@ function play_or_add_video(path_src, wh, enable_loop) {
   }
 }
 
-function get_tsv_data(path_data, list_src, wh, enable_loop) {
+function get_start_index(dic_keys) {
+  for (let [key, value] of Object.entries(dic_keys)) {
+    if (value['type'] == 'sequent') {
+      if ('start_src' in value) {
+        window.dic_start_indexes[key] = Math.max(value['src'].indexOf(value['start_src']), 0)
+      } else if ('start_index' in value) {
+        window.dic_start_indexes[key] = Math.min(value['start_index'], value['src'].length - 1)
+      } else {
+        window.dic_start_indexes[key] = 0
+      }
+    }
+  }
+}
+
+function get_tsv_data(path_data, dic_keys, wh, enable_loop) {
   $.ajax({
     url: path_data,
     type: 'GET',
@@ -44,8 +58,20 @@ function get_tsv_data(path_data, list_src, wh, enable_loop) {
       var arr = tsv2array(res);
       if (JSON.stringify(window.arr_display) != JSON.stringify(arr[arr.length - 1])) {
         window.arr_display = arr[arr.length - 1];
-        var srcArr = list_src[arr[arr.length - 1][1]];
-        play_or_add_video(srcArr[Math.floor(Math.random() * srcArr.length)], wh, enable_loop);
+        var str_key = arr[arr.length - 1][1];
+        if (str_key in dic_keys) {
+          var src_arr = dic_keys[str_key]['src'];
+          if (dic_keys[str_key]['type'] == 'sequent') {
+            play_or_add_video(src_arr[window.dic_start_indexes[str_key]], wh, enable_loop);
+            if (window.dic_start_indexes[str_key] + 1 > src_arr.length - 1) {
+              window.dic_start_indexes[str_key] = 0
+            } else {
+              window.dic_start_indexes[str_key] += 1
+            }
+          } else {
+            play_or_add_video(src_arr[Math.floor(Math.random() * src_arr.length)], wh, enable_loop);
+          }
+        }
       }
     },
     error:function() {
