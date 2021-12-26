@@ -36,7 +36,7 @@ function play_or_add_video(path_src, wh, enable_loop) {
 
 function get_start_index(dic_keys) {
   for (let [key, value] of Object.entries(dic_keys)) {
-    if (value['type'] == 'sequent') {
+    if (value['mode'] == 'sequent') {
       if ('start_src' in value) {
         window.dic_start_indexes[key] = Math.max(value['src'].indexOf(value['start_src']), 0)
       } else if ('start_index' in value) {
@@ -59,9 +59,9 @@ function get_tsv_data(path_data, dic_keys, wh, enable_loop) {
       if (JSON.stringify(window.arr_display) != JSON.stringify(arr[arr.length - 1])) {
         window.arr_display = arr[arr.length - 1];
         var str_key = arr[arr.length - 1][1];
-        if (str_key in dic_keys) {
+        if (str_key in dic_keys && dic_keys[str_key]['src'].length > 0) {
           var src_arr = dic_keys[str_key]['src'];
-          if (dic_keys[str_key]['type'] == 'sequent') {
+          if (dic_keys[str_key]['mode'] == 'sequent') {
             play_or_add_video(src_arr[window.dic_start_indexes[str_key]], wh, enable_loop);
             if (window.dic_start_indexes[str_key] + 1 > src_arr.length - 1) {
               window.dic_start_indexes[str_key] = 0
